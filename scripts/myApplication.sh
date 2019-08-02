@@ -20,6 +20,17 @@ run_myApp(){
 	cat $navigationApp
 }
 
+test_suites(){
+	printf "\n[ INFO ][ `date -v1m -v+1y` ]:Run test suite cases\n"
+	#Call button_test cases
+	test_case="$DIR/test_cases"
+	/bin/sh $test_case/button_tests.sh UP
+	/bin/sh $test_case/button_tests.sh LEFT
+	/bin/sh $test_case/button_tests.sh RIGHT
+	/bin/sh $test_case/button_tests.sh DOWN
+	printf "[ INFO ]:End of test cases\n"
+}
+
 clean_up(){
 	rm -f $navigationApp
 	rm -f $unitTestResults
@@ -32,6 +43,16 @@ main(){
 
 	build_myApp
 	run_myApp
+	test_suites | tee -a $unitTestResults
+
+	printf "\n[ Navigation app ]: $navigationApp"
+	printf "\n[ Test results ]: $unitTestResults"
+	if [ ` grep -c "NOK" $unitTestResults ` == 0 ];then
+		echo "\n$GREEN[ INFO ]:All tests passed, code ready for deployment\n$RESET"
+	else
+		echo "\n$RED[ INFO ]:Some tests failed, code not ready for deployment\n$RESET"
+	fi
+	clean_up
 }
 
 main $@
