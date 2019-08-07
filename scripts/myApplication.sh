@@ -32,8 +32,8 @@ test_suites(){
 }
 
 clean_up(){
-	rm -f $navigationApp
-	rm -f $unitTestResults
+	clean $navigationApp
+	clean $unitTestResults
 }
 
 main(){
